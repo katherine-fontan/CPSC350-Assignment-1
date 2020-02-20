@@ -19,7 +19,7 @@ double meanCalculation(int sum, int lineCount);
 double variance (string sequence, double mean, int lineCount);
 double standardDeviation(double variance);
 string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double relProbabilityC, double relProbabilityT, double relProbabilityG);
-
+double probabilityBigram(int count, int sum);
 
 int main(int argc, char **argv){
 
@@ -53,6 +53,7 @@ int main(int argc, char **argv){
       double lineCount = 0.0; //keep track of how many lines
       double mean = 0.0; // initialize mean variable
       string sequence = ""; //string to get
+      string dna = "";
 
       //check if file exist
       if (!inFS.is_open()) {
@@ -71,6 +72,8 @@ int main(int argc, char **argv){
 
           sequence += fileInfo; //probability thing
           sequence += " ";
+
+          dna += fileInfo;
 
           cout << "string ->    "<< fileInfo <<endl; //check if everything it being read in properly.
           lineCount++; //keep track of the number of lines in the file
@@ -136,46 +139,123 @@ int main(int argc, char **argv){
       int countAT = 0;
       int countAG = 0;
 
+      int countCA = 0;
+      int countCC = 0;
+      int countCT = 0;
+      int countCG = 0;
+
+      int countTA = 0;
+      int countTC = 0;
+      int countTT = 0;
+      int countTG = 0;
+
+      int countGA = 0;
+      int countGC = 0;
+      int countGT = 0;
+      int countGG = 0;
+
       //probability of each bigram
-      for (int i = 0; i < sequence.size(); i += 2) {
-        char nucleotides = toupper(sequence[i]); //to account for upper and lower capitalization
+      for (int i = 0; i < dna.size(); i += 2) {
+        char nucleotides = toupper(dna[i]); //to account for upper and lower capitalization
 
 
         if(nucleotides == 'A'){
-          if(sequence[i + 1] == 'A')
+          if(dna[i + 1] == 'A')
             countAA++;
-          else if(sequence[i + 1] == 'C')
+          else if(dna[i + 1] == 'C')
             countAC++;
-          else if(sequence[i + 1] == 'T')
+          else if(dna[i + 1] == 'T')
             countAT++;
-          else if(sequence[i + 1] == 'G')
+          else if(dna[i + 1] == 'G')
             countAG++;
 
         }
 
-        else if(nucleotides == 'T')
-          countT++;//to calculate probability
-        else if(nucleotides == 'C')
-          countC++;//to calculate probability
-        else if (nucleotides == 'G')
-          countG++; //to calculate probability
+        else if(nucleotides == 'C'){
+          if(dna[i + 1] == 'A')
+            countCA++;
+          else if(dna[i + 1] == 'C')
+            countCC++;
+          else if(dna[i + 1] == 'T')
+            countCT++;
+          else if(dna[i + 1] == 'G')
+            countCG++;
+        }
+
+        else if(nucleotides == 'T'){
+          if(dna[i + 1] == 'A')
+            countTA++;
+          else if(dna[i + 1] == 'C')
+            countTC++;
+          else if(dna[i + 1] == 'T')
+            countTT++;
+          else if(dna[i + 1] == 'G')
+            countTG++;
+
+        }
+
+        else if (nucleotides == 'G'){
+          if(dna[i + 1] == 'A')
+            countGA++;
+          else if(dna[i + 1] == 'C')
+            countGC++;
+          else if(dna[i + 1] == 'T')
+            countGT++;
+          else if(dna[i + 1] == 'G')
+            countGG++;
+        }
+
       }
 
       //calculates probability of bigrams
-      double probAA = countAA / (sum / 2.0);
-      double probAC = countAC / (sum / 2.0);
-      double probAT = countAT / (sum / 2.0);
-      double probAG = countAG / (sum / 2.0);
+      double probAA = probabilityBigram(countAA,sum);
+      double probAC = probabilityBigram(countAC,sum);
+      double probAT = probabilityBigram(countAT,sum);
+      double probAG = probabilityBigram(countAG,sum);
 
-      cout << "prob of AA " << probAA << endl;
-      cout << "prob of AC " << probAC << endl;
-      cout << "prob of AT " << probAT << endl;
-      cout << "prob of AG " << probAG << endl;
+      //outputs results to file
+      outputFile << "\nHere is the relative probability of each nucleotide bigram: \n" << endl;
+      outputFile << "AA:          " << probAA << endl;
+      outputFile << "AC:          " << probAC << endl;
+      outputFile << "AT:          " << probAT << endl;
+      outputFile << "AG:          " << probAG << endl;
 
+      double probCA = probabilityBigram(countCA, sum);
+      double probCC = probabilityBigram(countCC, sum);
+      double probCT = probabilityBigram(countCT, sum);
+      double probCG = probabilityBigram(countCG, sum);
+
+      outputFile << "CA:          " << probCA << endl;
+      outputFile << "CC:          " << probCC << endl;
+      outputFile << "CT:          " << probCT << endl;
+      outputFile << "CG:          " << probCG << endl;
+
+      double probTA = probabilityBigram(countTA, sum);
+      double probTC = probabilityBigram(countTC, sum);
+      double probTT = probabilityBigram(countTT, sum);
+      double probTG = probabilityBigram(countTG, sum);
+
+      outputFile << "TA:          " << probTA << endl;
+      outputFile << "TC:          " << probTC << endl;
+      outputFile << "TT:          " << probTT << endl;
+      outputFile << "TG:          " << probTG << endl;
+
+      double probGA = probabilityBigram(countGA, sum);
+      double probGC = probabilityBigram(countGC, sum);
+      double probGT = probabilityBigram(countGT, sum);
+      double probGG = probabilityBigram(countGG, sum);
+
+      outputFile << "GA:          " << probGA << endl;
+      outputFile << "GC:          " << probGC << endl;
+      outputFile << "GT:          " << probGT << endl;
+      outputFile << "GG:          " << probGG << endl;
 
 
       //generate 1000 DNA strings whose lengths follow a Gaussian distribution with the same mean and variance calculated
       string randomDNA = DNAgenerator(theMean, theStdDev, relProbabilityA, relProbabilityC, relProbabilityT, relProbabilityG);
+
+      outputFile << "\n\n1000 DNA strings:\n" << endl;
+      //outputFile << randomDNA;
 
 
       //ask the user if they want to analyze another file
@@ -229,6 +309,13 @@ double standardDeviation (double variance){
   return stdDev;
 }
 
+double probabilityBigram(int count, int sum){
+
+  double bigramProb = count / (sum / 2.0);
+
+  return bigramProb;
+
+}
 
 string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double relProbabilityC, double relProbabilityT, double relProbabilityG){
   string dna = "";
@@ -237,8 +324,22 @@ string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double r
   int b = ((double) rand() /(RAND_MAX));
 
   //calculat C and D
-  double C = sqrt(-2 * log (a)) * cos(2 * M_PI * b);
-  double D = stdDEv* C + mean;
+
+  double C = (sqrt(-2 * log(a))) * (cos(2 * (M_PI) * b));
+  double D = stdDEv * C + mean;
+
+  int count = 0;
+
+  while(count < 1000)
+  {
+    //append to the dna string
+    //use stats of each nucleotide
+
+    dna+= "\n";
+    count++;
+
+  }
+
 
 
   return dna;
