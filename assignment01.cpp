@@ -152,11 +152,11 @@ int main(int argc, char **argv){
       int countGG = 0;
 
       //probability of each bigram
-      for (int i = 0; i < dna.size(); i += 2) { // += two so i is every other i is analyzed
+      for (int i = 0; i < dna.size(); i += 2) { // += two so i is every other index analyzed
         char nucleotides = toupper(dna[i]); //to account for upper and lower capitalization
 
 
-        if(nucleotides == 'A'){
+        if(nucleotides == 'A'){//if its A then check the next index
           if(dna[i + 1] == 'A')
             countAA++; // increase count for AA bigram...
           else if(dna[i + 1] == 'C')
@@ -203,7 +203,7 @@ int main(int argc, char **argv){
       }
 
       //calculates probability of bigrams
-      double probAA = probabilityBigram(countAA,sum);
+      double probAA = probabilityBigram(countAA,sum);//call function
       double probAC = probabilityBigram(countAC,sum);
       double probAT = probabilityBigram(countAT,sum);
       double probAG = probabilityBigram(countAG,sum);
@@ -278,7 +278,7 @@ double meanCalculation(int sum, int lineCount){
 
 double variance (string sequence, double mean, int lineCount){
 
-  double variance = 0.0;
+  double variance = 0.0; //initialize variables
   int currentLength = 0;
   double sumVarianceNumerator = 0.0;
 
@@ -315,9 +315,9 @@ double probabilityBigram(int count, int sum){
 }
 
 string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double relProbabilityC, double relProbabilityT, double relProbabilityG){
-  string dna = "";
+  string dna = ""; // string to store the new DNA sequence
 
-  int count = 0;
+  int count = 0; //count to increase on every iteration of the while loop until 1000
 
   while(count < 1000)
   {
@@ -325,7 +325,7 @@ string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double r
     //use stats of each nucleotide
 
     //generate two random numbers
-    double a = ((double) rand() /(RAND_MAX +1.0));
+    double a = ((double) rand() /(RAND_MAX +1.0)); //call for to random numbers
     double b = ((double) rand() /(RAND_MAX +1.0));
 
     //use C and D formulas
@@ -334,10 +334,10 @@ string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double r
 
 
     for(int i = 0; i < D; ++i){
-
+      //for loop to generate each line with a specific length D
       double randProb = rand()/(RAND_MAX + 1.0);
 
-      if(randProb <= relProbabilityA)
+      if(randProb <= relProbabilityA) //bounds of probability based on a random probability and the probability of each nucleotide
         dna += 'A';
       else if(relProbabilityA < randProb && randProb <= (relProbabilityG + relProbabilityA))
         dna += 'G';
@@ -348,10 +348,10 @@ string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double r
 
     }
 
-    dna += "\n";
-    count++;
+    dna += "\n";//add new line at the end of each for loop iteration to have add to 1000 lines of DNA sequence.
+    count++; //increase count
 
   }
 
-  return dna;
+  return dna;//return the dna sequence generated
 }
