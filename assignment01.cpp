@@ -25,7 +25,7 @@ int main(int argc, char **argv){
 
   //check command line argument
   if(argc < 2){
-    cout<< "Invalid command line parameters" <<endl;
+    cout<< "Invalid command line parameters!" <<endl;
     return 1;
   }
   string userChoice = "y"; //initialize a variable for user choice if they want to anayze another file or not
@@ -41,13 +41,13 @@ int main(int argc, char **argv){
   while(userChoice == "y")
   {
       string fileName = fName; //reasign file name to another variable to be able to ask for new files.
-      ifstream inFS;  // Input file stream
+      ifstream inputFile;  // Input file stream
       string fileInfo; //file information
 
       // Try to open file
-      cout << "Opening file "<< fName << endl;
+      cout << "Opening file: "<< fName << endl;
 
-      inFS.open(fName);
+      inputFile.open(fName);
 
       int sum = 0; //keep track of how many characters in the file
       double lineCount = 0.0; //keep track of how many lines
@@ -56,17 +56,17 @@ int main(int argc, char **argv){
       string dna = "";
 
       //check if file exist
-      if (!inFS.is_open()) {
+      if (!inputFile.is_open()) {
         cout << "Could not open file " << fName << endl;
         return 1; //error
       }
 
       //while loop to read the file and get DNA sequence;
-      while(!inFS.eof()){
+      while(!inputFile.eof()){
 
-        inFS >> fileInfo;
+        inputFile >> fileInfo;
 
-        if(!inFS.fail()){
+        if(!inputFile.fail()){
           //for loop to get each char of the file count how many strings there are in the file
           int lineLength = fileInfo.size();
 
@@ -75,14 +75,12 @@ int main(int argc, char **argv){
 
           dna += fileInfo;
 
-          cout << "string ->    "<< fileInfo <<endl; //check if everything it being read in properly.
           lineCount++; //keep track of the number of lines in the file
 
           sum += lineLength; //to calculate sum of the legth of each line
         }
       }
-
-
+      inputFile.close();
       outputFile<< "\nSummary statistics from file " << fName << ":\n"<<endl; //append to the file
       //output sum, mean, variance and std
       outputFile << "The Sum of the length of the DNA strings is " << sum << endl;
@@ -121,13 +119,12 @@ int main(int argc, char **argv){
           countG++; //to calculate probability
       }
 
-
       relProbabilityA = countA / (double) sum;
       relProbabilityC = countC / (double) sum;
       relProbabilityG = countG / (double) sum;
       relProbabilityT = countT / (double) sum;
 
-      outputFile << "\nHere is the relative probability of each nucleotide:" << endl;
+      outputFile << "\nHere is the relative probability of each nucleotide: \n" << endl;
       outputFile << "A:           " << relProbabilityA << endl;
       outputFile << "C:           " << relProbabilityC << endl;
       outputFile << "T:           " << relProbabilityT << endl;
@@ -155,20 +152,19 @@ int main(int argc, char **argv){
       int countGG = 0;
 
       //probability of each bigram
-      for (int i = 0; i < dna.size(); i += 2) {
+      for (int i = 0; i < dna.size(); i += 2) { // += two so i is every other i is analyzed
         char nucleotides = toupper(dna[i]); //to account for upper and lower capitalization
 
 
         if(nucleotides == 'A'){
           if(dna[i + 1] == 'A')
-            countAA++;
+            countAA++; // increase count for AA bigram...
           else if(dna[i + 1] == 'C')
             countAC++;
           else if(dna[i + 1] == 'T')
             countAT++;
           else if(dna[i + 1] == 'G')
             countAG++;
-
         }
 
         else if(nucleotides == 'C'){
@@ -204,7 +200,6 @@ int main(int argc, char **argv){
           else if(dna[i + 1] == 'G')
             countGG++;
         }
-
       }
 
       //calculates probability of bigrams
@@ -254,19 +249,22 @@ int main(int argc, char **argv){
       //generate 1000 DNA strings whose lengths follow a Gaussian distribution with the same mean and variance calculated
       string randomDNA = DNAgenerator(theMean, theStdDev, relProbabilityA, relProbabilityC, relProbabilityT, relProbabilityG);
 
-      outputFile << "\n\n1000 DNA strings:\n" << endl;
-      //outputFile << randomDNA;
+      outputFile << "\n\nDNA Generated following a Gaussian distribution: \n"<<endl;
+      //output them into the file yourname.txt
+      outputFile << randomDNA;
 
 
       //ask the user if they want to analyze another file
-      cout << "\nWant to analyze another file? ";
+      cout << "\nWant to analyze another file (y or n)? ";
       cin>> userChoice;
 
       if(userChoice == "y"){
         cout<< "What is the file name? ";
         cin >> fName;
-      }
+    }
   }
+  cout << "bye then!\n" <<endl;
+  outputFile.close();
   return 0;
 }
 
@@ -314,19 +312,10 @@ double probabilityBigram(int count, int sum){
   double bigramProb = count / (sum / 2.0);
 
   return bigramProb;
-
 }
 
 string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double relProbabilityC, double relProbabilityT, double relProbabilityG){
   string dna = "";
-  //generated two random numbers
-  int a = ((double) rand() /(RAND_MAX));
-  int b = ((double) rand() /(RAND_MAX));
-
-  //calculat C and D
-
-  double C = (sqrt(-2 * log(a))) * (cos(2 * (M_PI) * b));
-  double D = stdDEv * C + mean;
 
   int count = 0;
 
@@ -335,12 +324,34 @@ string DNAgenerator(double mean, double stdDEv, double relProbabilityA, double r
     //append to the dna string
     //use stats of each nucleotide
 
-    dna+= "\n";
+    //generate two random numbers
+    double a = ((double) rand() /(RAND_MAX +1.0));
+    double b = ((double) rand() /(RAND_MAX +1.0));
+
+    //use C and D formulas
+    double C = (sqrt( -2* log(a))) * (cos(2 * M_PI * b));
+    double D = (stdDEv * C) + mean; //line lengths
+
+
+    for(int i = 0; i < D; ++i){
+
+      double randProb = rand()/(RAND_MAX + 1.0);
+
+      if(randProb <= relProbabilityA)
+        dna += 'A';
+      else if(relProbabilityA < randProb && randProb <= (relProbabilityG + relProbabilityA))
+        dna += 'G';
+      else if((relProbabilityG + relProbabilityA) < randProb && randProb <= (relProbabilityA + relProbabilityG + relProbabilityC))
+        dna += 'C';
+      else if ((relProbabilityA + relProbabilityG + relProbabilityC) < randProb && randProb <= 1)
+        dna += 'T';
+
+    }
+
+    dna += "\n";
     count++;
 
   }
-
-
 
   return dna;
 }
