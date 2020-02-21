@@ -17,7 +17,7 @@ g++ Assignment01.cpp filename
 
 References:
 
-Zybooks chapter on streams
--for pi https://www.quantstart.com/articles/Mathematical-Constants-in-C/
-Tutoring center - helped with variance, and DNA generator
+Zybooks chapter on streams and rand()
+- for pi, cos, log and sqrt: https://www.quantstart.com/articles/Mathematical-Constants-in-C/
+Tutoring center: helped with variance, and DNA generator
 
