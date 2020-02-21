@@ -20,4 +20,4 @@ References:
 Zybooks chapter on streams
 -for pi https://www.quantstart.com/articles/Mathematical-Constants-in-C/
 Tutoring center - helped with variance, and DNA generator
-Michael (SI) for output file example and input file example
+
