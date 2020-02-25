@@ -11,13 +11,14 @@ Source files:
 Assignment01.cpp
 README.txt
 
+If you input a file that doesn't only contain ACTG (contains other letters), that letter will not be counted towards the probability of each nucleotide nor the probability of each nucleotide bigram, as it accounts for that with an else statement in the for loops. However, it is accounted for on the sum of the length, mean, standard deviation and variance, as those are based on the length of each line and the total length of the file.
+
 To run the program:
 
 g++ Assignment01.cpp filename
 
 References:
 
-Zybooks chapter on streams
--for pi https://www.quantstart.com/articles/Mathematical-Constants-in-C/
-Tutoring center - Daniel and Sabelle :)
-Michael (SI) for output file example and input file example
+Zybooks chapter on streams and rand()
+- for pi, cos, log and sqrt: https://www.quantstart.com/articles/Mathematical-Constants-in-C/
+Tutoring center: helped with variance, and DNA generator

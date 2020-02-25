@@ -71,9 +71,9 @@ int main(int argc, char **argv){
           int lineLength = fileInfo.size();
 
           sequence += fileInfo; //probability thing
-          sequence += " ";
+          sequence += " "; //add this to sum everytime a line ends
 
-          dna += fileInfo;
+          dna += fileInfo; //without a space so its easier to evaluate bigrams
 
           lineCount++; //keep track of the number of lines in the file
 
@@ -117,6 +117,11 @@ int main(int argc, char **argv){
           countC++;//to calculate probability
         else if (nucleotides == 'G')
           countG++; //to calculate probability
+        else if (nucleotides == ' ') // this else if statement is so that your else only acconts for other letters in the alphabet
+          continue;
+        else{
+          --sum;  //you decrease the count of sum to that your relative probabilities aren't affected by random nucleotide that is not ACTG
+        }
       }
 
       relProbabilityA = countA / (double) sum;
@@ -200,6 +205,10 @@ int main(int argc, char **argv){
           else if(dna[i + 1] == 'G')
             countGG++;
         }
+        else{
+          --i; // if its not one of these letters than decrease i to ignore that specific letter and it doesnt mess up the index count
+        }
+
       }
 
       //calculates probability of bigrams
