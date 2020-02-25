@@ -15,14 +15,10 @@ If you input a file that doesn't only contain ACTG (contains other letters), tha
 
 To run the program:
 
-g++ Assignment01.cpp filename
+g++ Assignment01.cpp
 
 References:
 
 Zybooks chapter on streams and rand()
 - for pi, cos, log and sqrt: https://www.quantstart.com/articles/Mathematical-Constants-in-C/
 Tutoring center: helped with variance, and DNA generator
-<<<<<<< HEAD
-=======
-
->>>>>>> refs/remotes/origin/master
