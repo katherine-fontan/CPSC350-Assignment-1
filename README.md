@@ -11,6 +11,7 @@ Source files:
 Assignment01.cpp
 README.txt
 
+If you input a file that doesn't only contain ACTG (contains other letters), that letter will not be counted towards the probability of each nucleotide nor the probability of each nucleotide bigram, as it accounts for that with an else statement in the for loops. However, it is accounted for on the sum of the length, mean, standard deviation and variance, as those are based on the length of each line and the total length of the file.
 To run the program:
 
 g++ Assignment01.cpp filename
